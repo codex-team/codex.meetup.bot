@@ -1,0 +1,15 @@
+version: "3.4"
+
+services:
+  mongodb:
+    image: mongo:4.4.3
+    hostname: mongodb
+    volumes:
+      - mongodata:/data/db
+      - mongo-config:/data/configdb
+    ports:
+      - 27017:27017
+
+volumes:
+  mongodata:
+  mongo-config:
