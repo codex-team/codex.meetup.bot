@@ -3,25 +3,27 @@ from telegram.ext import CallbackContext
 import namesgenerator
 
 from src.services.cloudflare import create_dns_record
+from src.services.database import database
 from src.services.env import YANDEX_CLOUD_FOLDER_ID, CLOUDFLARE_ZONE
 from src.services.yandex_cloud import create_instance
 
 
 def get_server(update: Update, _: CallbackContext) -> None:
-    update.message.reply_text('Creating server...')
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text('Creating server...')
 
-    generated_name = update.message.from_user.username or namesgenerator.get_random_name(sep="-")
-
+    generated_name = query.from_user.username or namesgenerator.get_random_name(sep="-")
     server_name = f'{generated_name}-server'
 
     server_data = create_instance(YANDEX_CLOUD_FOLDER_ID, 'ru-central1-a', server_name, None)
+    database.servers.insert_one(server_data)
 
-    update.message.reply_text('Server created successfully. Obtaining domain name')
+    query.edit_message_text('Server created successfully. Obtaining domain name')
 
-    ip_address = server_data.network_interfaces[0].primary_v4_address.one_to_one_nat.address
-
+    ip_address = server_data['networkInterfaces'][0]['primaryV4Address']['oneToOneNat']['address']
     domain_name = f'{generated_name}.{CLOUDFLARE_ZONE}'
-    create_dns_record(domain_name, ip_address)
+    created_domain_name = create_dns_record(domain_name, ip_address)
+    database.domain_names.insert_one(created_domain_name)
 
-    update.message.reply_text('Domain name successfully created: ' + domain_name)
-
+    query.edit_message_text('Domain name successfully created: ' + domain_name)

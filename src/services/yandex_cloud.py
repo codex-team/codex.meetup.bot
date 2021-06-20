@@ -1,4 +1,6 @@
 import logging
+
+from google.protobuf.json_format import MessageToDict
 from yandex.cloud.compute.v1.image_service_pb2 import GetImageLatestByFamilyRequest
 from yandex.cloud.compute.v1.image_service_pb2_grpc import ImageServiceStub
 from yandex.cloud.compute.v1.instance_pb2 import IPV4, Instance
@@ -8,23 +10,25 @@ from yandex.cloud.compute.v1.instance_service_pb2 import (
     AttachedDiskSpec,
     NetworkInterfaceSpec,
     PrimaryAddressSpec,
-    OneToOneNatSpec, CreateInstanceMetadata,
+    OneToOneNatSpec,
+    CreateInstanceMetadata,
+    DeleteInstanceRequest, DeleteInstanceMetadata,
 )
 from yandex.cloud.compute.v1.instance_service_pb2_grpc import InstanceServiceStub
 import os
+import yandexcloud
+import json
+from yandexcloud import SDK
 
 script_dir = os.path.dirname(__file__)
 rel_path = "../../key.json"
 abs_file_path = os.path.join(script_dir, rel_path)
 
-import yandexcloud
-
-import json
-
 with open(abs_file_path) as json_file:
     sa_key = json.load(json_file)
 
-sdk = yandexcloud.SDK(service_account_key=sa_key)
+sdk: SDK = yandexcloud.SDK(service_account_key=sa_key)
+instance_service = sdk.client(InstanceServiceStub)
 
 
 def create_instance(folder_id, zone, name, subnet_id):
@@ -36,7 +40,6 @@ def create_instance(folder_id, zone, name, subnet_id):
         )
     )
     subnet_id = subnet_id or sdk.helpers.find_subnet_id(folder_id, zone)
-    instance_service = sdk.client(InstanceServiceStub)
     operation = instance_service.Create(CreateInstanceRequest(
         folder_id=folder_id,
         name=name,
@@ -74,4 +77,17 @@ def create_instance(folder_id, zone, name, subnet_id):
         meta_type=CreateInstanceMetadata,
     )
 
-    return operation_result.response
+    return MessageToDict(operation_result.response)
+
+
+def delete_instance(instance_id):
+    operation = instance_service.Delete(
+        DeleteInstanceRequest(instance_id=instance_id))
+
+    operation_result = sdk.wait_operation_and_get_result(
+        operation,
+        response_type=Instance,
+        meta_type=DeleteInstanceMetadata,
+    )
+
+    return MessageToDict(operation_result.response)

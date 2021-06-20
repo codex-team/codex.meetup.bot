@@ -1,17 +1,20 @@
-from telegram import Update, ReplyKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 
+from src.states import State
 from src.services.database import database
 
 
 def start(update: Update, _: CallbackContext) -> None:
     keyboard = [
         [
-            '/get_server'
-        ],
+            InlineKeyboardButton("Get list of servers", callback_data=State.GET_SERVERS_LIST.name),
+            InlineKeyboardButton("Get server", callback_data=State.GET_SERVER.name),
+            InlineKeyboardButton("Delete all servers", callback_data=State.DELETE_ALL_SERVERS.name),
+        ]
     ]
 
-    reply_markup = ReplyKeyboardMarkup(keyboard)
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
     user = update.message.from_user
     query = {'id': user.id}

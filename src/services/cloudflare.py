@@ -11,4 +11,4 @@ def create_dns_record(name, content):
         'content': content,
         'type': 'A',
     }
-    cf.zones.dns_records.post(CLOUDFLARE_ZONE_ID, data=dns_record)
+    return cf.zones.dns_records.post(CLOUDFLARE_ZONE_ID, data=dns_record)
