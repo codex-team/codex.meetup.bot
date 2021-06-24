@@ -15,7 +15,7 @@ def delete_all_servers(update, context):
     for domain in database.domain_names.find():
         try:
             delete_dns_record(domain['id'])
-        except Exception as e:
+        except Exception:
             pass
         finally:
             database.domain_names.remove({'id': domain['id']})

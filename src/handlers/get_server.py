@@ -11,14 +11,23 @@ from src.services.yandex_cloud import create_instance
 def get_server(update: Update, _: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
-    query.edit_message_text('Creating server...')
+
+    existing_server = database.servers.find_one({'userId': query.from_user.id})
+
+    if existing_server:
+        query.edit_message_text('К вашему аккаунту уже привязан сервер')
+        return
+
+    text = 'Инициализируем сервер...'
+    query.edit_message_text(text)
 
     generated_name = query.from_user.username or namesgenerator.get_random_name(sep="-")
     server_name = f'{generated_name}-server'
 
     server_data = create_instance(YANDEX_CLOUD_FOLDER_ID, 'ru-central1-a', server_name, None)
 
-    query.edit_message_text('Server created successfully. Obtaining domain name')
+    text = text + '\nСервер успешно создан. Выделяем доменное имя...'
+    query.edit_message_text(text)
 
     ip_address = server_data['networkInterfaces'][0]['primaryV4Address']['oneToOneNat']['address']
     server_data['userId'] = query.from_user.id
@@ -29,4 +38,5 @@ def get_server(update: Update, _: CallbackContext) -> None:
     database.servers.insert_one(server_data)
     database.domain_names.insert_one(created_domain_name)
 
-    query.edit_message_text('Domain name successfully created: ' + domain_name)
+    text = text + '\nСервер успешно создан:'
+    query.edit_message_text(text)
