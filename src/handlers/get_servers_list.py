@@ -16,8 +16,10 @@ def get_servers_list(update: Update, _: CallbackContext) -> None:
 
     servers = database.servers.find({})
 
-    message = list(map(get_server_info_str, servers))
+    messages = list(map(get_server_info_str, servers))
 
-    query.edit_message_text('\n'.join(message))
+    message = '\n'.join(messages) if len(messages) > 0 else 'Серверов не найдено'
+
+    query.edit_message_text(message)
 
     smth_else_handler(update)
