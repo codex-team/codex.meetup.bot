@@ -1,8 +1,8 @@
 from pymongo import ReturnDocument
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 
-from src.states import State
+from src.utils.keyboard import get_keyboard_for_user
 from src.services.database import database
 
 
@@ -17,34 +17,19 @@ def start(update: Update, _: CallbackContext) -> None:
     )
 
     if founded_user.get('is_admin', False):
-        keyboard = [
-            [
-                InlineKeyboardButton("Список серверов", callback_data=State.GET_SERVERS_LIST.name),
-                InlineKeyboardButton("Получить сервер", callback_data=State.GET_SERVER.name),
-                InlineKeyboardButton("Удалить все сервера", callback_data=State.DELETE_ALL_SERVERS.name),
-            ]
-        ]
+        keyboard = get_keyboard_for_user(user)
 
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text('Действия администратора:', reply_markup=reply_markup)
         return
 
     if founded_user.get('is_registered', False):
-        keyboard = [
-            [
-                InlineKeyboardButton("Получить сервер", callback_data=State.GET_SERVER.name),
-                InlineKeyboardButton("Удалить мой сервер", callback_data=State.DELETE_MY_SERVER.name),
-            ]
-        ]
+        keyboard = get_keyboard_for_user(user)
 
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text('Выберите действие:', reply_markup=reply_markup)
     else:
-        keyboard = [
-            [
-                InlineKeyboardButton("Хочу на митап!", callback_data=State.CONFIRM_PARTICIPATION.name),
-            ]
-        ]
+        keyboard = get_keyboard_for_user(user)
 
         reply_markup = InlineKeyboardMarkup(keyboard)
 

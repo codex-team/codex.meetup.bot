@@ -2,7 +2,9 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from src.services.database import database
-from src.services.yandex_cloud import delete_instance
+from src.services.dns_controller import dns_controller
+from src.services.servers_controller import servers_controller
+from src.utils.smth_else_handler import smth_else_handler
 
 
 def delete_my_server(update: Update, _: CallbackContext):
@@ -12,9 +14,11 @@ def delete_my_server(update: Update, _: CallbackContext):
 
     if server:
         text = 'Удаляем серверочек...'
-        server_id = server.get('id')
         query.edit_message_text(text)
-        delete_instance(server_id)
-        database.servers.delete_one({'id': server_id})
+        servers_controller.delete_server_by_user_id(query.from_user.id)
+        dns_controller.delete_record_by_user_id(query.from_user.id)
+        query.edit_message_text('Сервер удалён')
     else:
         query.edit_message_text('Не найдено серверов, привязанных к вашему аккаунту')
+
+    smth_else_handler(update)

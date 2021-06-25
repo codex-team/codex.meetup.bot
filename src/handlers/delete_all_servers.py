@@ -1,21 +1,19 @@
-from src.services.cloudflare import delete_dns_record
+from telegram import Update
+
 from src.services.database import database
-from src.services.yandex_cloud import delete_instance
+from src.services.dns_controller import dns_controller
+from src.services.servers_controller import servers_controller
+from src.utils.smth_else_handler import smth_else_handler
 
 
-def delete_all_servers(update, context):
+def delete_all_servers(update: Update, context):
+    update.callback_query.message.edit_text('Удаляю сервера и домены')
+
     for server in database.servers.find():
-        try:
-            delete_instance(server['id'])
-        except Exception:
-            pass
-        finally:
-            database.servers.remove({'id': server['id']})
+        servers_controller.delete_server_by_id(server['id'])
 
     for domain in database.domain_names.find():
-        try:
-            delete_dns_record(domain['id'])
-        except Exception:
-            pass
-        finally:
-            database.domain_names.remove({'id': domain['id']})
+        dns_controller.delete_record_by_id(domain['id'])
+    update.callback_query.message.reply_text('Всё готово')
+
+    smth_else_handler(update)
