@@ -27,7 +27,7 @@ class ServerController:
                 sleep(5)
 
         stdin, stdout, stderr = ssh_client.exec_command('sudo su')
-        stdin.write(f'echo -e "{password}\n{password}" | passwd\n')
+        stdin.write('echo -e "' + password + '\n' + password + '" | passwd\n')
         stdin.write('echo "PasswordAuthentication yes" | sudo tee -a /etc/ssh/sshd_config\n')
         stdin.write('echo "PermitRootLogin yes" | sudo tee -a /etc/ssh/sshd_config\n')
         stdin.write('sudo service ssh restart')
