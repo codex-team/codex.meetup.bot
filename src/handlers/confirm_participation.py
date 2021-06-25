@@ -6,7 +6,6 @@ from src.services.env import PARTICIPANT_LIMIT
 
 def confirm_participation(update: Update, _: CallbackContext):
     query = update.callback_query
-    # query.answer()
 
     participate_count = database.users.count_documents({'is_registered': True})
 

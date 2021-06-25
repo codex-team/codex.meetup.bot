@@ -39,6 +39,7 @@ class ServerController:
         return result_str
 
     def create_server(self, user_id, server_name):
+        print(f'create {server_name}')
         server_data = create_instance(server_name)
         ip_address = server_data['networkInterfaces'][0]['primaryV4Address']['oneToOneNat']['address']
 
