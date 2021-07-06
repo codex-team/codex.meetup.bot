@@ -9,6 +9,7 @@ class State(Enum):
     GET_FULL_SERVERS_LIST = auto()
     DELETE_ALL_SERVERS = auto()
     CONFIRM_PARTICIPATION = auto()
+    REJECT_PARTICIPATION = auto()
 
     def pattern(self):
         return '^' + str(self.name) + '$'

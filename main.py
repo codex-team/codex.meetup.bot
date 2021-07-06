@@ -4,6 +4,7 @@ from telegram.utils.request import Request
 
 from src.handlers.confirm_participation import confirm_participation
 from src.handlers.delete_my_server import delete_my_server
+from src.handlers.reject_participation import reject_participation
 from src.handlers.start import start
 from src.handlers.get_servers_list import get_servers_list
 from src.handlers.create_server import get_server
@@ -25,6 +26,7 @@ def main():
 
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(CallbackQueryHandler(confirm_participation, pattern=State.CONFIRM_PARTICIPATION.pattern()))
+    dispatcher.add_handler(CallbackQueryHandler(reject_participation, pattern=State.REJECT_PARTICIPATION.pattern()))
 
     if not PRE_REGISTRATION_MODE:
         dispatcher.add_handler(CommandHandler('menu', start))

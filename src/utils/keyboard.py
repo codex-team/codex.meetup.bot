@@ -4,6 +4,24 @@ from src.services.database import database
 from src.states import State
 
 
+def get_keyboard_for_meetup_registration(tg_user: User):
+    user = database.users.find_one({'id': tg_user.id})
+    if not user.get('is_registered', False):
+        keyboard = [
+            [
+                InlineKeyboardButton("Хочу на митап!", callback_data=State.CONFIRM_PARTICIPATION.name),
+            ]
+        ]
+    else:
+        keyboard = [
+            [
+                InlineKeyboardButton("Не приду на митап :(", callback_data=State.REJECT_PARTICIPATION.name),
+            ]
+        ]
+
+    return keyboard
+
+
 def get_keyboard_for_user(tg_user: User):
     user = database.users.find_one({'id': tg_user.id})
     if user.get('is_admin', False):
