@@ -30,9 +30,9 @@ def start(update: Update, _: CallbackContext) -> None:
     if founded_user.get('is_registered', False):
         if PRE_REGISTRATION_MODE:
             update.message.reply_text("""
-Вы уже зарегистрирован. 
+Вы уже зарегистрированы. 
 
-Ждём вас 15го июля в 19:00 в корпусе ИТМО на Песочной набережной д.14, ауд. 308.
+Ждём вас 15го июля в 19:00 в ИТМО на Песочной набережной 14, ауд. 308.
 
 Не забудьте взять ноутбук с предварительно установленным Ansible.
             """)
