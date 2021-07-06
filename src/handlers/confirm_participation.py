@@ -19,8 +19,8 @@ def confirm_participation(update: Update, _: CallbackContext):
     )
 
     update.callback_query.message.reply_text("""
-Вы успешно зарегистрированы на митап. 
+Вы зарегистрированы. 
 
-Ждём вас 15го июля в 19:00 в корпусе ИТМО на Песочной набережной д.14, ауд. 308.
+Ждём вас 15го июля в 19:00 в ИТМО на Песочной набережной 14, ауд. 308.
     """)
     query.edit_message_reply_markup(None)
