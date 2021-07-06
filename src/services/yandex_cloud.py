@@ -30,8 +30,6 @@ with open(abs_file_path) as json_file:
     sa_key = json.load(json_file)
 
 
-
-
 def create_instance(name):
     sdk: SDK = yandexcloud.SDK(service_account_key=sa_key)
     instance_service = sdk.client(InstanceServiceStub)
