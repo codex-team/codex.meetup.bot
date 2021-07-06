@@ -18,5 +18,6 @@ def confirm_participation(update: Update, _: CallbackContext):
         {'$set': {'is_registered': True}}
     )
 
-    update.callback_query.message.reply_text('Вы успешно зарегистрированы на митап! Ждём вас в среду блаблабла')
+    update.callback_query.message.reply_text('Ты успешно зарегистрирован на митап. Ждём тебя 15го июля в 19:00 в '
+                                             'корпусе ИТМО на Песочной набережной д.14, ауд. 308.')
     query.edit_message_reply_markup(None)

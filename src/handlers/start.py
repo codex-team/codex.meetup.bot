@@ -29,7 +29,11 @@ def start(update: Update, _: CallbackContext) -> None:
 
     if founded_user.get('is_registered', False):
         if PRE_REGISTRATION_MODE:
-            update.message.reply_text('Вы уже зарегистрированы')
+            update.message.reply_text("""
+Ты уже зарегистрирован на митап. 
+Ждём тебя 15го июля в 19:00 в корпусе ИТМО на Песочной набережной д.14, ауд. 308.
+Не забудь взять ноутбук с предварительно установленным Ansible.
+            """)
             return
 
         keyboard = get_keyboard_for_user(user)
@@ -44,7 +48,9 @@ def start(update: Update, _: CallbackContext) -> None:
         welcome_text = """
 Привет!
 С помощью этого бота ты можешь зарегистрироваться на наш митап по Ansible.
-Нажми на кнопку, чтобы подтвердить участие
+Митап пройдёт 15го июля в 19:00 в корпусе ИТМО на Песочной набережной д.14, ауд. 308.
+Для участия в митапе потребуется взять ноутбук с предварительно установленным Ansible.
+Нажми на кнопку, чтобы подтвердить участие.
         """
 
         update.message.reply_text(welcome_text, reply_markup=reply_markup)
