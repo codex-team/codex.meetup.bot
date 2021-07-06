@@ -22,5 +22,7 @@ def confirm_participation(update: Update, _: CallbackContext):
 Вы зарегистрированы. 
 
 Ждём вас 15го июля в 19:00 в ИТМО на Песочной набережной 14, ауд. 308.
+
+Для участия вам потребуется ноутбук с установленным Ansible.
     """)
     query.edit_message_reply_markup(None)
