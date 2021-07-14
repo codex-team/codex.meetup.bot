@@ -1,7 +1,6 @@
 import logging
 
-from telegram.utils.request import Request
-
+from src.bot import bot
 from src.handlers.confirm_participation import confirm_participation
 from src.handlers.delete_my_server import delete_my_server
 from src.handlers.reject_participation import reject_participation
@@ -9,8 +8,8 @@ from src.handlers.start import start
 from src.handlers.get_servers_list import get_servers_list
 from src.handlers.create_server import get_server
 from src.handlers.delete_all_servers import delete_all_servers
-from src.services.env import TOKEN, PRE_REGISTRATION_MODE
-from telegram.ext import CommandHandler, Updater, CallbackQueryHandler, Defaults, ExtBot
+from src.services.env import PRE_REGISTRATION_MODE
+from telegram.ext import CommandHandler, Updater, CallbackQueryHandler
 from src.states import State
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -18,9 +17,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 
 def main():
-    defaults = Defaults(run_async=True, parse_mode='Markdown')
-    bot = ExtBot(token=TOKEN, request=Request(con_pool_size=8))
-    bot.defaults = defaults
     updater = Updater(bot=bot)
     dispatcher = updater.dispatcher
 
