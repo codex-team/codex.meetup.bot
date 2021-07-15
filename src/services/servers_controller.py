@@ -1,3 +1,4 @@
+import logging
 import os
 import random
 import string
@@ -16,14 +17,17 @@ private_key = paramiko.RSAKey.from_private_key_file(abs_file_path)
 
 class ServerController:
     def __enable_password_auth(self, server_ip, password):
+        logging.info(f"Setup password for instance with ip: {server_ip}")
         ssh_client = paramiko.SSHClient()
         ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        for x in range(5):
+        for x in range(15):
             try:
                 ssh_client.connect(hostname=server_ip, username="ubuntu", pkey=private_key)
+                logging.info(f"Finished setting password for instance with ip: {server_ip}")
                 break
             except Exception as e:
-                print(e)
+                logging.info(f"Error while setup password (attempt {x})")
+                logging.error(e)
                 sleep(5)
 
         stdin, stdout, stderr = ssh_client.exec_command('sudo su')
@@ -39,7 +43,7 @@ class ServerController:
         return result_str
 
     def create_server(self, user_id, server_name):
-        print(f'create {server_name}')
+        logging.info(f'create {server_name}')
         server_data = create_instance(server_name)
         ip_address = server_data['networkInterfaces'][0]['primaryV4Address']['oneToOneNat']['address']
 
