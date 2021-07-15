@@ -18,12 +18,13 @@ private_key = paramiko.RSAKey.from_private_key_file(abs_file_path)
 class ServerController:
     def __enable_password_auth(self, server_ip, password):
         logging.info(f"Setup password for instance with ip: {server_ip}")
-        ssh_client = paramiko.SSHClient()
-        ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh_client = None
         for x in range(15):
             try:
+                ssh_client = paramiko.SSHClient()
+                ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                 ssh_client.connect(hostname=server_ip, username="ubuntu", pkey=private_key)
-                logging.info(f"Finished setting password for instance with ip: {server_ip}")
+                logging.info(f"Connected to instance with ip: {server_ip}")
                 break
             except Exception as e:
                 logging.info(f"Error while setup password (attempt {x})")
@@ -31,10 +32,16 @@ class ServerController:
                 sleep(5)
 
         stdin, stdout, stderr = ssh_client.exec_command('sudo su')
+        sleep(2)
         stdin.write('echo -e "' + password + '\n' + password + '" | passwd\n')
+        sleep(2)
         stdin.write('echo "PasswordAuthentication yes" | sudo tee -a /etc/ssh/sshd_config\n')
+        sleep(2)
         stdin.write('echo "PermitRootLogin yes" | sudo tee -a /etc/ssh/sshd_config\n')
+        sleep(2)
         stdin.write('sudo service ssh restart')
+        sleep(2)
+        logging.info(f"Finished setting password for instance with ip: {server_ip}")
 
     def generate_password(self, length):
         # choose from all lowercase letter
