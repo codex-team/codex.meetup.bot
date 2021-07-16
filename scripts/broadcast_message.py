@@ -3,11 +3,13 @@ from src.services.database import database
 from src.services.env import BROADCAST_TEST_MODE
 
 message = """
-Напоминаем, что вы зарегистрированы на CodeX Meetup: Ansible, который пройдёт завтра, в 19:00 в корпусе ИТМО на Песочной набережной 14, ауд. 308. 
+Привет.
 
-Для участия вам потребуется ноутбук с установленным Ansible.
+Были рады видеть каждого на прошедшем митапе. Все исходники можно скачать с GitHub: https://github.com/codex-team/ansible-meetup
 
-Гайд по установке Ansible: https://codex.so/how-to-install-ansible.
+Анонсы предстоящих мероприятий CodeX будут публиковаться в группе https://vk.com/codex_team.
+
+Ждем вас снова.
 """
 
 if __name__ == '__main__':
