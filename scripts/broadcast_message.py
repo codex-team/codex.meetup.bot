@@ -5,9 +5,9 @@ from src.services.env import BROADCAST_TEST_MODE
 message = """
 Привет.
 
-Были рады видеть каждого на прошедшем митапе. Все исходники можно скачать с GitHub: https://github.com/codex-team/ansible-meetup
+Были рады видеть каждого на прошедшем митапе. Все исходники можно скачать с GitHub: https://github.com/codex-team/ansible-meetup.
 
-Анонсы предстоящих мероприятий CodeX будут публиковаться в группе https://vk.com/codex_team.
+Анонсы предстоящих мероприятий CodeX будут публиковаться в группе https://vk.com/codex\_team.
 
 Ждем вас снова.
 """
